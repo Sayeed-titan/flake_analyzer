@@ -67,23 +67,28 @@ if not exist ".venv\Scripts\python.exe" (
     echo   Done.
 )
 
-:: ── Install dependencies (once) ───────────────────────────────────────────────
+:: ── Install / repair dependencies ─────────────────────────────────────────────
 if not exist ".venv\Scripts\flakescope.ready" (
     echo.
     echo   Installing required packages (one-time setup, ~2-3 minutes)...
-    echo   Please wait and keep your internet connection active.
+    echo   Please keep your internet connection active.
     echo.
-    .venv\Scripts\python -m pip install --quiet --upgrade pip
-    .venv\Scripts\pip install --quiet PyQt5 opencv-python numpy scikit-image
+
+    .venv\Scripts\python.exe -m pip install --upgrade pip --quiet
+    .venv\Scripts\pip.exe uninstall opencv-python-headless -y >nul 2>&1
+    .venv\Scripts\pip.exe install PyQt5 opencv-python numpy scikit-image
+
     if errorlevel 1 (
         echo.
+        echo   ============================================================
         echo   ERROR: Package installation failed.
+        echo   ============================================================
         echo.
         echo   Possible causes:
         echo     - No internet connection
         echo     - Firewall or proxy blocking pip
         echo.
-        echo   Fix: connect to the internet and delete the .venv folder,
+        echo   Fix: connect to the internet, delete the .venv folder,
         echo   then double-click FlakeScope.bat to retry.
         echo.
         pause
@@ -97,18 +102,28 @@ if not exist ".venv\Scripts\flakescope.ready" (
 
 :: ── Launch ────────────────────────────────────────────────────────────────────
 title FlakeScope — Graphene / hBN Analyzer
-cls
 echo   Launching FlakeScope...
-.venv\Scripts\python main.py
-set EXIT_CODE=%errorlevel%
-if %EXIT_CODE% neq 0 (
+
+.venv\Scripts\python.exe main.py 2> flakescope_error.log
+
+set APP_EXIT=%errorlevel%
+if %APP_EXIT% neq 0 (
     echo.
-    echo   FlakeScope exited with an error (code %EXIT_CODE%).
-    echo   Check the output above for details.
+    echo   ============================================================
+    echo   FlakeScope closed with an error (code %APP_EXIT%).
+    echo   ============================================================
     echo.
-    echo   If you see "ModuleNotFoundError", delete the .venv folder
-    echo   and double-click FlakeScope.bat to reinstall packages.
+    echo   Error details:
+    echo   ------------------------------------------------------------
+    type flakescope_error.log
+    echo   ------------------------------------------------------------
+    echo.
+    echo   If you see "ModuleNotFoundError":
+    echo     Delete the .venv folder and double-click FlakeScope.bat
+    echo     to reinstall all packages.
     echo.
     pause
+) else (
+    del /f /q flakescope_error.log >nul 2>&1
 )
 endlocal
