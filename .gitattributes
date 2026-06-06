@@ -1,0 +1,13 @@
+# Normalise line endings across platforms.
+* text=auto eol=lf
+
+# Windows batch launcher must keep CRLF to run correctly.
+*.bat text eol=crlf
+
+# Treat images as binary.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.tif binary
+*.tiff binary
+*.bmp binary

@@ -1,0 +1,33 @@
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# ── Virtual environments ─────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+.venv*/
+
+# ── FlakeScope first-run marker ──────────────────────────────────────────────
+*.ready
+
+# ── Real research microscopy images ──────────────────────────────────────────
+# Excluded from the public repo on purpose: these are real, likely-unpublished
+# research data. Remove the line below if you intend to publish them as a dataset.
+real_images/
+
+# ── Generated output ─────────────────────────────────────────────────────────
+*_overlay.png
+flake_results.csv
+test_microscopy.png
+
+# ── OS / editor cruft ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
