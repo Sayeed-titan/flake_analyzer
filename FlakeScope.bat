@@ -100,23 +100,7 @@ if not exist ".venv\Scripts\flakescope.ready" (
     echo.
 )
 
-:: ── Launch ────────────────────────────────────────────────────────────────────
-title FlakeScope — Graphene / hBN Analyzer
-echo   Launching FlakeScope...
-echo.
-echo   (This window will close automatically — the app opens separately.)
-echo.
-
-:: Use pythonw.exe (GUI subsystem) so the app runs independently of this window.
-:: 'start "" /b' detaches python from the CMD console so closing CMD won't kill it.
-start "" /b .venv\Scripts\pythonw.exe main.py
-
-:: Give the app 2 seconds to start, then let this window close on its own.
-:: If pythonw.exe is missing (shouldn't happen), fall back to regular python.exe.
-if errorlevel 1 (
-    echo   WARNING: pythonw.exe failed, trying python.exe...
-    start "" /b .venv\Scripts\python.exe main.py
-)
-
-timeout /t 2 /nobreak >nul
+:: ── Launch via VBScript (handles GUI launch cleanly on all Windows versions) ───
+echo   Setup complete! Starting FlakeScope...
+wscript.exe //nologo "%~dp0FlakeScope.vbs"
 endlocal
