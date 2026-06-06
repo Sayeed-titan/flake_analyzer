@@ -16,11 +16,14 @@ researchers use to count layers.
 ## ⚡ One-click start (Windows)
 
 1. Make sure [Python 3.8+](https://www.python.org/downloads/) is installed
-   (tick **“Add Python to PATH”** during install).
-2. **Double-click `FlakeScope.bat`.**
+   (tick **”Add Python to PATH”** during install).
+2. **Double-click `FlakeScope.vbs`.**
 
-On the first run it builds an isolated environment and installs everything
-automatically (~2–3 min, one time). Every later run just launches the app.
+On the first run a dialog appears asking to confirm the one-time setup
+(~2–3 min). `FlakeScope.vbs` calls `FlakeScope.bat` to create an isolated
+virtual environment and install all dependencies, then launches the app
+silently using `pythonw.exe` (no console window). Every later run skips
+setup and opens the app directly.
 
 ### Manual start (any OS)
 
@@ -124,11 +127,12 @@ for f in flakes:
 ```
 flake_analyzer/
 ├── engine.py            ← analysis core (no GUI) — testable & scriptable
-├── main.py              ← PyQt5 desktop app
+├── main.py              ← PyQt6 desktop app
 ├── validate_engine.py   ← headless batch runner / sanity check
 ├── generate_test_image.py
 ├── requirements.txt
-├── FlakeScope.bat       ← one-click Windows launcher
+├── FlakeScope.vbs       ← one-click Windows launcher (double-click this)
+├── FlakeScope.bat       ← setup + venv installer, called by FlakeScope.vbs
 ├── LICENSE              ← MIT
 ├── CONTRIBUTING.md
 └── README.md
@@ -143,7 +147,7 @@ flake_analyzer/
 ## Dependencies
 
 ```
-PyQt5 >= 5.15
+PyQt6 >= 6.4
 opencv-python >= 4.5
 numpy >= 1.21
 scikit-image >= 0.18
