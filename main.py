@@ -1188,4 +1188,21 @@ def main():
 
 
 if __name__ == "__main__":
+    import traceback
+
+    def _crash_hook(exc_type, exc_value, exc_tb):
+        """Write any unhandled exception to a file so silent crashes are visible."""
+        msg = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+        crash_path = Path(__file__).parent / "flakescope_crash.log"
+        with open(crash_path, "w", encoding="utf-8") as f:
+            f.write(msg)
+        # Also try to show it in a message box if Qt is alive
+        try:
+            from PyQt5.QtWidgets import QMessageBox
+            QMessageBox.critical(None, "FlakeScope crashed", msg)
+        except Exception:
+            pass
+        sys.__excepthook__(exc_type, exc_value, exc_tb)
+
+    sys.excepthook = _crash_hook
     main()
