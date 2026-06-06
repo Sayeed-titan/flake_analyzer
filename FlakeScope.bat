@@ -103,27 +103,20 @@ if not exist ".venv\Scripts\flakescope.ready" (
 :: ── Launch ────────────────────────────────────────────────────────────────────
 title FlakeScope — Graphene / hBN Analyzer
 echo   Launching FlakeScope...
+echo.
+echo   (This window will close automatically — the app opens separately.)
+echo.
 
-.venv\Scripts\python.exe main.py 2> flakescope_error.log
+:: Use pythonw.exe (GUI subsystem) so the app runs independently of this window.
+:: 'start "" /b' detaches python from the CMD console so closing CMD won't kill it.
+start "" /b .venv\Scripts\pythonw.exe main.py
 
-set APP_EXIT=%errorlevel%
-if %APP_EXIT% neq 0 (
-    echo.
-    echo   ============================================================
-    echo   FlakeScope closed with an error (code %APP_EXIT%).
-    echo   ============================================================
-    echo.
-    echo   Error details:
-    echo   ------------------------------------------------------------
-    type flakescope_error.log
-    echo   ------------------------------------------------------------
-    echo.
-    echo   If you see "ModuleNotFoundError":
-    echo     Delete the .venv folder and double-click FlakeScope.bat
-    echo     to reinstall all packages.
-    echo.
-    pause
-) else (
-    del /f /q flakescope_error.log >nul 2>&1
+:: Give the app 2 seconds to start, then let this window close on its own.
+:: If pythonw.exe is missing (shouldn't happen), fall back to regular python.exe.
+if errorlevel 1 (
+    echo   WARNING: pythonw.exe failed, trying python.exe...
+    start "" /b .venv\Scripts\python.exe main.py
 )
+
+timeout /t 2 /nobreak >nul
 endlocal
